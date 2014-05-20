@@ -3,87 +3,115 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcourtin <vcourtin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ccorazza <ccorazza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2013/12/07 18:23:09 by vcourtin          #+#    #+#             */
-/*   Updated: 2013/12/07 18:23:11 by vcourtin         ###   ########.fr       */
+/*   Created: 2014/02/25 15:03:08 by ccorazza          #+#    #+#             */
+/*   Updated: 2014/05/18 09:14:23 by ccorazza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./includes/libft.h"
+#include <stdlib.h>
+#include <unistd.h>
+#include "libft.h"
 
-void	split(char **buff, char **rest, int *ifretline)
+static char		*ft_nstrchr(char *s)
 {
-	int		i;
-	int		j;
-	char	*temp;
-
-	i = 0;
-	j = 0;
-	temp = (char*)malloc(ft_strlen(*buff));
-	free(*rest);
-	*rest = temp;
-	while ((*buff)[i] != '\n' && (*buff)[i] != '\0')
-		i++;
-	if ((*buff)[i] == '\n')
+	while (*s)
 	{
-		*ifretline = 1;
-		(*buff)[i++] = '\0';
+		if (*s == '\n')
+			return (s);
+		s++;
 	}
-	while ((*buff)[i] != '\0')
-		(*rest)[j++] = (*buff)[i++];
-	if ((*buff)[i] == '\0')
-		(*rest)[j] = '\0';
+	return (NULL);
 }
 
-void	manager_buffer(char **buff, char **rest, char **line, int *ifretline)
+static char		*ft_joinbuffs(char *s1, char *s2)
 {
-		ft_strcpy(*buff, *rest);
-		split(buff, rest, ifretline);
-		ft_bzero(*line, ft_strlen(*line));
-		*line = ft_strjoin(*line, *buff);
-		free(*buff);
+	char		*ret;
+	char		*tmp;
+	int			len;
+
+	tmp = s1;
+	while (*tmp)
+		tmp++;
+	ret = s2;
+	while (*ret)
+		ret++;
+	len = ret - s2;
+	if (!(ret = (char *)malloc(sizeof(char) * (1 + len + tmp - s1))))
+		return (NULL);
+	ret[len + (tmp - s1)] = '\0';
+	tmp = ret;
+	while ((*tmp = *(s1++)))
+		tmp++;
+	while ((*tmp = *(s2++)))
+		tmp++;
+	return (ret);
 }
 
-void	manager_read(char **buff, char **rest, char **line, int *ifretline)
+static int		last_line(char **line, char **buf)
 {
-		split(buff, rest, ifretline);
-		*line = ft_strjoin(*line, *buff);
-		free(*buff);
-}
-
-int		last_tring(char **rest, char **buff)
-{
-	*rest = "";
-	free(*buff);
-	return (1);
-}
-
-int		get_next_line(int const fd, char ** line)
-{
-	int				ret_read;
-	char			*buff;
-	static char		*rest = NULL;
-	int				ifretline;
-
-	ret_read = 0;
-	ifretline = 0;
-	if ((buff = (char*)malloc(512)) == NULL
-		|| (*line = ft_memalloc(1)) == NULL)
-			return (-1);
-	if (!rest)
-		rest = ft_memalloc(1);
-	if (*rest != '\0' && ft_strchr(rest, '\n'))
+	if (**buf)
 	{
-		manager_buffer(&buff, &rest, line, &ifretline);
+		*line = *buf;
+		*buf = NULL;
 		return (1);
 	}
-	while (ifretline == 0 && (ret_read = read(fd, buff, 512)))
+	return (0);
+}
+
+static int		next_line(int fd, char **line, char **buf)
+{
+	char		buffer[BUFF_SIZE + 1];
+	char		*tmp;
+	int			ret;
+
+	while ((ret = read(fd, buffer, BUFF_SIZE)))
 	{
-		buff[ret_read] = '\0';
-		manager_read(&buff, &rest, line, &ifretline);
+		buffer[ret] = '\0';
+		if (ret == -1)
+			return (-1);
+		if ((tmp = ft_nstrchr(buffer)))
+		{
+			*tmp = '\0';
+			if ((*line = ft_joinbuffs(*buf, buffer)) == NULL
+				|| (tmp = ft_joinbuffs(tmp + 1, "\0")) == NULL)
+				return (-1);
+			free(*buf);
+			*buf = tmp;
+			return (1);
+		}
+		if ((tmp = ft_joinbuffs(*buf, buffer)) == NULL)
+			return (-1);
+		free(*buf);
+		*buf = tmp;
 	}
-	if (buff[0] == '\0' && rest[0] != '\0' && ret_read == 0)
-		return (last_tring(&rest, &buff));
-	return (ret_read = (*line[0] == '\0' ? 0 : 1));
+	return (last_line(line, buf));
+}
+
+int				get_next_line(int fd, char **line)
+{
+	static char	*buf;
+	char		*tmp;
+
+	if (buf)
+	{
+		if ((tmp = ft_nstrchr(buf)))
+		{
+			*tmp = '\0';
+			if ((*line = ft_joinbuffs(buf, "\0")) == NULL
+				|| (tmp = ft_joinbuffs(tmp + 1, "\0")) == NULL)
+				return (-1);
+			free(buf);
+			buf = tmp;
+			return (1);
+		}
+	}
+	else
+	{
+		if ((buf = (char *)malloc(sizeof(char))) == NULL)
+			return (-1);
+		*buf = '\0';
+	}
+	return (next_line(fd, line, &buf));
 }

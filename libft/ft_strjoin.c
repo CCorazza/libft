@@ -3,34 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcourtin <vcourtin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ccorazza <ccorazza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2013/11/27 16:28:22 by vcourtin          #+#    #+#             */
-/*   Updated: 2013/11/27 16:28:24 by vcourtin         ###   ########.fr       */
+/*   Created: 2014/04/19 17:18:48 by ccorazza          #+#    #+#             */
+/*   Updated: 2014/04/19 19:39:03 by ccorazza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./includes/libft.h"
+#include <stdlib.h>
+#include "libft.h"
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char			*ft_strjoin(char const *s1, char const *s2)
 {
-	int		i;
-	char	*str;
+	size_t		len;
+	char		*res;
+	char		*total;
 
-	i = 0;
-	str = ft_memalloc(ft_strlen(s1) + ft_strlen(s2) + 1);
-	if (str == NULL)
+	len = ft_strlen(s1) + ft_strlen(s2);
+	if (!(res = (char *)malloc((len + 1) * sizeof(char))))
 		return (NULL);
-	while (*s1 != '\0')
-	{
-		str[i] = *s1++;
-		i++;
-	}
-	while (*s2 != '\0')
-	{
-		str[i] = *s2++;
-		i++;
-	}
-	str[i] = '\0';
-	return (str);
+	total = res;
+	while (*s1)
+		*res++ = *s1++;
+	while (*s2)
+		*res++ = *s2++;
+	*res = 0;
+	return (total);
 }

@@ -3,28 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strmapi.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcourtin <vcourtin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ccorazza <ccorazza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2013/11/25 18:44:06 by vcourtin          #+#    #+#             */
-/*   Updated: 2013/11/25 18:44:08 by vcourtin         ###   ########.fr       */
+/*   Created: 2013/11/19 12:18:26 by ccorazza          #+#    #+#             */
+/*   Updated: 2014/04/20 05:11:52 by ccorazza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./includes/libft.h"
+#include <stdlib.h>
+#include "libft.h"
 
-char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
+char			*ft_strmapi(const char *s, char (*f)(unsigned int, char))
 {
-	int		i;
-	char	*str;
+	char		*ret;
+	size_t		size;
 
-	i = 0;
-	str = (char *)malloc(sizeof(char) * ft_strlen(s));
-	while (*s != '\0')
-	{
-		str[i] = f(i, *s);
-		s++;
-		i++;
-	}
-	str[i] = '\0';
-	return (str);
+	if (!s || !f)
+		return (NULL);
+	size = ft_strlen(s);
+	if ((ret = ft_strnew(size)) == NULL)
+		return (NULL);
+	while (size-- > 0)
+		ret[size] = f(size, s[size]);
+	return (ret);
 }

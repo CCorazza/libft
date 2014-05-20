@@ -3,38 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strnstr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcourtin <vcourtin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ccorazza <ccorazza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2013/11/20 18:00:34 by vcourtin          #+#    #+#             */
-/*   Updated: 2013/11/20 18:00:40 by vcourtin         ###   ########.fr       */
+/*   Created: 2014/04/18 05:40:58 by ccorazza          #+#    #+#             */
+/*   Updated: 2014/04/20 05:16:50 by ccorazza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./includes/libft.h"
+#include <string.h>
 
 char	*ft_strnstr(const char *s1, const char *s2, size_t n)
 {
-	size_t		i;
-	size_t		j;
+	int	i;
 
 	i = 0;
-	if (s1 == NULL || s2 == NULL)
-		return (NULL);
 	if (*s2 == '\0')
-		return ((char*)s1);
-	while (s1[i] != '\0' && n != 0)
+		return ((char *)s1);
+	while (*s1 && n > 0)
 	{
-		j = 0;
-		while ((s1[i] == s2[j]) && ((s1[i] != '\0') || (s2[j] != '\0')))
+		while ((s1[i] == s2[i]) && (i < (int)n))
 		{
-			n --;
+			if ((s2[i + 1] == '\0') || (n - i == 0))
+				return ((char *)s1);
 			i++;
-			j++;
 		}
-		if (s2[j] == '\0')
-			return ((char *)s1 + i - j);
+		i = 0;
+		s1++;
 		n--;
-		i = i - j + 1;
 	}
-	return (NULL);
+	return (0);
 }

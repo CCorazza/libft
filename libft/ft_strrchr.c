@@ -3,38 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strrchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcourtin <vcourtin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ccorazza <ccorazza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2013/11/20 17:25:19 by vcourtin          #+#    #+#             */
-/*   Updated: 2013/11/20 17:25:22 by vcourtin         ###   ########.fr       */
+/*   Created: 2014/04/18 05:43:36 by ccorazza          #+#    #+#             */
+/*   Updated: 2014/04/20 05:16:55 by ccorazza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./includes/libft.h"
-
-char	*ft_strrchr(const char *s, int c)
+char		*ft_strrchr(const char *s, int c)
 {
+	char	a;
 	int		i;
-	int		match;
-	char	*stock;
 
 	i = 0;
-	match = 0;
-	while (s[i] != '\0')
-	{
-		if (s[i] == c)
-		{
-			stock = (char *)&s[i];
-			match = 1;
-			i++;
-		}
-		else
-			i++;
-	}
-	if (s[i] == c)
+	a = (char)c;
+	while (s[i] != 0)
+		i++;
+	while ((s[i] != a) && i > 0)
+		i--;
+	if (s[i] == a)
 		return ((char *)&s[i]);
-	else if (match == 1)
-		return (stock);
-	else
-		return (NULL);
+	return (0);
 }

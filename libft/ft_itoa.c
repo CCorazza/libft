@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcourtin <vcourtin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ccorazza <ccorazza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2013/11/28 15:00:48 by vcourtin          #+#    #+#             */
-/*   Updated: 2013/11/28 15:00:51 by vcourtin         ###   ########.fr       */
+/*   Created: 2014/04/18 06:01:49 by ccorazza          #+#    #+#             */
+/*   Updated: 2014/04/20 05:11:34 by ccorazza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./includes/libft.h"
+#include <stdlib.h>
 
 static char		*ft_itoaextreme(char *str)
 {
-	int		n;
-	int		i;
+	int			n;
+	int			i;
 
 	n = 2147483647;
 	i = 11;
@@ -33,20 +33,19 @@ static char		*ft_itoaextreme(char *str)
 
 char			*ft_itoa(int n)
 {
-	int		i;
-	char	*str;
-	int		temp;
+	int			i;
+	char		*str;
+	int			temp;
 
-	i = 0;
+	i = (n > 0) ? 0 : 1;
 	str = (char *)malloc(sizeof(char) * i);
 	if (n == -2147483648)
 		return (ft_itoaextreme(str));
-	i = (n > 0) ? 0 : 1;
 	temp = n;
 	while (temp != 0)
 	{
 		temp = temp / 10;
-		i ++;
+		i++;
 	}
 	str[0] = (n >= 0) ? '0' : '-';
 	str[i--] = '\0';

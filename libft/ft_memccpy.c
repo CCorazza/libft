@@ -3,36 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memccpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcourtin <vcourtin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ccorazza <ccorazza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2013/11/20 09:11:43 by vcourtin          #+#    #+#             */
-/*   Updated: 2013/11/20 09:14:27 by vcourtin         ###   ########.fr       */
+/*   Created: 2013/11/21 17:11:44 by ccorazza          #+#    #+#             */
+/*   Updated: 2014/04/20 05:11:57 by ccorazza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./includes/libft.h"
+#include <string.h>
 
-void	*ft_memccpy(void *s1, const void *s2, int c, size_t n)
+void			*ft_memccpy(void *s1, const void *s2, int c, size_t n)
 {
-	int		i;
-	char	*str;
-	char	*str2;
+	char		*d;
+	const char	*s;
 
-	str = (char *)s1;
-	str2 = (char *)s2;
-	i = 0;
-	while (n != 0)
+	if (n)
 	{
-		if (str2[i] == c)
+		d = (char*)s1;
+		s = (const char*)s2;
+		while (n--)
 		{
-			str[i] = str2[i];
-			return (&str[i + 1]);
-		}
-		else
-		{
-			str[i] = str2[i];
-			n--;
-			i++;
+			*(d++) = *(s++);
+			if (*(s - 1) == c)
+				return (d);
 		}
 	}
 	return (NULL);

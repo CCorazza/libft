@@ -3,23 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strclr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcourtin <vcourtin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ccorazza <ccorazza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2013/11/24 14:34:47 by vcourtin          #+#    #+#             */
-/*   Updated: 2013/11/24 14:34:50 by vcourtin         ###   ########.fr       */
+/*   Created: 2014/04/18 06:19:05 by ccorazza          #+#    #+#             */
+/*   Updated: 2014/04/19 19:40:44 by ccorazza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./includes/libft.h"
+#include "libft.h"
 
 void	ft_strclr(char *s)
 {
-	int		i;
-
-	i = 0;
-	while (s[i] != '\0')
-	{
-		s[i] = '\0';
-		i++;
-	}
+	ft_memset(s, 0, ft_strlen(s));
 }

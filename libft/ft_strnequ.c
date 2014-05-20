@@ -3,35 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strnequ.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcourtin <vcourtin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ccorazza <ccorazza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2013/11/25 18:46:26 by vcourtin          #+#    #+#             */
-/*   Updated: 2013/11/25 18:46:29 by vcourtin         ###   ########.fr       */
+/*   Created: 2013/11/19 13:58:36 by ccorazza          #+#    #+#             */
+/*   Updated: 2014/04/20 05:12:08 by ccorazza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./includes/libft.h"
+#include <stdlib.h>
 
-int		ft_strnequ(char const *s1, char const *s2, size_t n)
+int		ft_strnequ(const char *s1, const char *s2, size_t n)
 {
-	int		i;
-
-	i = 0;
-	if ((s1[i] == s2[i]) && (s1[i] == '\0'))
+	if (!s1 && !s2)
 		return (1);
-	if (n == 0)
-		return (1);
-	while (s1[i] == s2[i] && (s1[i] != '\0' || s2[i] != '\0'))
-	{
-		if (n == 0)
-			return (1);
-		n--;
-		i++;
-	}
-	if (n == 0)
-		return (1);
-	if (s1[i] == s2[i])
-		return (1);
-	else
+	else if (!s1 || !s2)
 		return (0);
+	while (n && (*s1 || *s2))
+	{
+		if (*s1 != *s2)
+			return (0);
+		++s1;
+		++s2;
+		--n;
+	}
+	return (1);
 }

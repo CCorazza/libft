@@ -3,40 +3,68 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcourtin <vcourtin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ccorazza <ccorazza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2013/11/27 16:28:38 by vcourtin          #+#    #+#             */
-/*   Updated: 2013/11/27 16:28:41 by vcourtin         ###   ########.fr       */
+/*   Created: 2014/04/19 18:47:08 by ccorazza          #+#    #+#             */
+/*   Updated: 2014/04/27 17:23:27 by ccorazza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./includes/libft.h"
+#include <stdlib.h>
+#include "libft.h"
 
-char	*ft_strtrim(char const *s)
+#define	IS_WD(c) ((c) != ' ' && (c) != '\t' && (c) != '\n')
+
+static int			findstart(char const *s)
 {
-	int		i;
-	int		size;
-	char	*str;
-	char	*start;
-	char	*end;
+	int				i;
 
 	i = 0;
-	size = 0;
-	while (s[i] == ' ' || s[i] == '\t' || s[i] == '\n')
-		i++;
-	start = (char *)&s[i];
-	i = ft_strlen(s) - 1;
-	while (s[i] == ' ' || s[i] == '\t' || s[i] == '\n')
-		i--;
-	end = (char *)&s[i];
-	size = ((end - start) < 0) ? (start - end) : (end - start);
-	str = (char *)malloc((size) + 1);
-	i = 0;
-	while (start <= end)
+	while (i < (int)ft_strlen(s))
 	{
-		str[i++] = *start;
-		start++;
+		if (IS_WD(s[i]))
+			return (i);
+		i += 1;
 	}
-	str[i] = '\0';
-	return (str);
+	return (0);
+}
+
+static int			findend(char const *s)
+{
+	int				i;
+
+	i = (int)ft_strlen(s) - 1;
+	while (i > 0)
+	{
+		if (IS_WD(s[i]))
+			return (i);
+		i -= 1;
+	}
+	return (0);
+}
+
+char				*ft_strtrim(char const *s)
+{
+	unsigned int	i;
+	unsigned int	j;
+	int				k;
+	char			*trim;
+
+	i = findstart(s);
+	j = findend(s);
+	k = 0;
+	trim = (char *)malloc(sizeof(char) * (j - i));
+	*trim = '\0';
+	if (trim)
+	{
+		if (i == 0 && j == ft_strlen(s))
+			return (ft_strdup(s));
+		if (i == 0 && j == 0)
+			return (trim);
+		while (i <= j)
+			trim[k++] = s[i++];
+		trim[k] = '\0';
+		return (trim);
+	}
+	return (NULL);
 }

@@ -3,65 +3,87 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strsplit.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vcourtin <vcourtin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ccorazza <ccorazza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2013/11/29 02:14:50 by vcourtin          #+#    #+#             */
-/*   Updated: 2013/11/29 02:14:52 by vcourtin         ###   ########.fr       */
+/*   Created: 2013/11/20 19:07:57 by ccorazza          #+#    #+#             */
+/*   Updated: 2014/04/20 05:12:17 by ccorazza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./includes/libft.h"
+#include <stdlib.h>
+#include "libft.h"
 
-static unsigned int		ft_nbword(char const *s, char c)
+static int		word_count(const char *s, char c)
 {
-	unsigned int	nbword;
+	int			i;
+	int			j;
 
-	nbword = 0;
-	while (*s)
-	{
-		while (*s && *s == c)
-			s++;
-		nbword = (*s ? nbword + 1 : nbword);
-		while (*s && *s != c)
-			s++;
-	}
-	return (nbword);
-}
-
-static unsigned int		ft_nextwordlen(char const *s, unsigned int i, char c)
-{
-	unsigned int	len;
-
-	len = 0;
-	while (s[i + len] != '\0' && s[i + len] != c)
-		len++;
-	return (len);
-}
-
-char					**ft_strsplit(char const *s, char c)
-{
-	char				**ret;
-	unsigned int		i;
-	unsigned int		nbword;
-	unsigned int		j;
-	unsigned int		nextword;
-
-	nbword = ft_nbword(s, c);
-	nbword = (nbword == 0 ? 1 : nbword);
-	i = 0;
+	i = -1;
 	j = 0;
-	ret = (char **)malloc((nbword + 1) * sizeof(char *));
-	while (i < nbword)
+	while (s[++i])
 	{
-		while (s[j] == c)
-			j++;
-		nextword = ft_nextwordlen(s, j, c);
-		nextword = (nextword == 0 ? 1 : nextword);
-		if ((ret[i] = ft_strsub(s, j, nextword)) == NULL)
-			return (NULL);
-		j += nextword;
-		i++;
+		if (s[i] != c)
+		{
+			++j;
+			while (s[i] != c)
+			{
+				if (!s[i])
+					return (j);
+				++i;
+			}
+		}
 	}
-	ret[i] = NULL;
+	return (j);
+}
+
+static int		word_length(const char *s, int i, int j, char c)
+{
+	while (s[i] && s[i] != c)
+	{
+		++i;
+		++j;
+	}
+	return (j);
+}
+
+static int		ft_free(char **tab)
+{
+	char		**tmp;
+
+	if (tab)
+	{
+		tmp = tab;
+		while (*tmp)
+			free(*(tmp++));
+		free(tab);
+	}
+	return (1);
+}
+
+char			**ft_strsplit(char const *s, char c)
+{
+	char		**ret;
+	int			i;
+	int			k;
+	int			word;
+
+	if (!s)
+		return (NULL);
+	word = word_count(s, c);
+	if (!(ret = (char**)malloc(sizeof(char*) * (word + 1))))
+		return (NULL);
+	i = 0;
+	k = -1;
+	ret[word] = 0;
+	while (++k < word)
+	{
+		while (s[i] == c)
+			++i;
+		if (!(ret[k] = ft_strsub(s, i, word_length(s, i, 0, c)))
+			&& ft_free(ret))
+			return (NULL);
+		while (s[i] && s[i] != c)
+			++i;
+	}
 	return (ret);
 }
