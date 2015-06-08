@@ -1,0 +1,19 @@
+COLOR0	= \033[0m
+GREEN	= \033[32m
+BRED	= \033[1;31m
+BCYAN	= \033[1;34m
+GOLD	= \033[33m
+GREY	= \033[38;5;239m
+
+PUCE0	= $(BRED)\t¤ $(COLOR0)
+PUCE1	= $(BCYAN)\t\t¤ $(COLOR0)
+PUCE2	= $(BCYAN)[?]$(GOLD)
+F_INFOS = \
+	echo "$(PUCE2)librairie   : $(COLOR0)$(NAME)"; \
+	echo "$(PUCE2)compilateur : $(COLOR0)$(CC)"; \
+	echo "$(PUCE2)extra-flags : $(COLOR0)$(FLAGS)"; \
+	echo "$(PUCE2)librairies  : $(COLOR0)$(LNAME)";
+
+help:
+	@printf "$(PUCE0)\tWelcome to $(GREEN)$(NAME)$(COLOR0) help$(PUCE0)\n\n";
+	@$(F_INFOS)

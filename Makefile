@@ -12,13 +12,15 @@
 
 NAME = libft.a
 
+include Makefile.help
 include Makefile.sources
 OBJ = $(SRC:.c=.o)
+FLAGS = -Wall -Wextra -Werror -ansi -O2
 
 all: $(NAME)
 
 $(NAME):
-	@clang -Wall -Wextra -Werror -c $(SRC)
+	@clang $(FLAGS) -c $(SRC)
 	@ar rc $(NAME) $(OBJ)
 	@ranlib $(NAME)
 
